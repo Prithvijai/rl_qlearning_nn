@@ -39,7 +39,6 @@ class GridWorldEnv(gym.Env):
         return self.agent_pos.copy(), {}
 
     def step(self, action: int):
-        # Dynamic Env
         p = self.np_random.random()
         if p < 0.8:
             actual_action = action
@@ -64,11 +63,10 @@ class GridWorldEnv(gym.Env):
         self.agent_pos[0] = np.clip(self.agent_pos[0], 0, self.rows - 1)
         self.agent_pos[1] = np.clip(self.agent_pos[1], 0, self.cols - 1)
 
-        # Wall collision -> revert
         if np.array_equal(self.agent_pos, self.wall_pos):
             self.agent_pos = prev_pos
 
-        # Rewarding 
+        # Reward
         terminated = False
         if np.array_equal(self.agent_pos, self.goal_pos):
             reward = self.goal_reward
@@ -82,7 +80,6 @@ class GridWorldEnv(gym.Env):
         if self.render_mode == "human":
             self._render_frame()
 
-        # return a copy of the state
         return self.agent_pos.copy(), float(reward), terminated, False, {}
 
     def render(self):
